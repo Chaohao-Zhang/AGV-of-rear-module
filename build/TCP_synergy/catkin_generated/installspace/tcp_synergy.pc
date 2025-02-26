@@ -1,0 +1,8 @@
+prefix=/home/hzx/motor/install
+
+Name: tcp_synergy
+Description: Description of tcp_synergy
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

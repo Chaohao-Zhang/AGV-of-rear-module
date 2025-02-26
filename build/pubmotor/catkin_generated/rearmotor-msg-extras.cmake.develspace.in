@@ -1,0 +1,2 @@
+set(rearmotor_MESSAGE_FILES "/home/hzx/motor/src/pubmotor/msg/motor.msg")
+set(rearmotor_SERVICE_FILES "")
