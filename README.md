@@ -7,6 +7,6 @@
 
 *Technical Notes:*  
 - "副臂/主臂" = `secondary arm/main arm`  
-- "开合"可根据机械需求译为 `open/close` 或 `expand/retract`  
-- "前车"指联动的前端设备（`front vehicle`）  
+- "开合"可根据机械需求为 `open/close` 或 `expand/retract`  
+- "前车"指联动的前端设备（`front module`）  
 - 协议实现需确保 TCP 通信的实时性和稳定性  
