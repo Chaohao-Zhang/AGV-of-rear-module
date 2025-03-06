@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 等待系统启动稳定
-sleep 5
+sleep 7
 
 # 创建日志文件
 LOG_FILE=/home/hzx/motor/log/start_ros_$(date +"%Y%m%d_%H%M%S").log
@@ -12,6 +12,9 @@ mkdir -p $(dirname "$LOG_FILE")
 # rosclean purge -y >> $LOG_FILE 2>&1
 
 # 更新 ROS 环境
+export ROS_MASTER_URI=http://192.168.1.22:11311
+export ROS_HOSTNAME=192.168.1.22
+
 source /opt/ros/melodic/setup.bash >> $LOG_FILE 2>&1
 source /home/hzx/motor/devel/setup.bash >> $LOG_FILE 2>&1
 sleep 1
@@ -45,15 +48,15 @@ echo "roscore is up and running." >> $LOG_FILE
 
 
 # 设置并启动 CAN 接口
-# sudo ip link set can0 up type can bitrate 1000000 >> $LOG_FILE 2>&1
-# sudo ifconfig can0 up >> $LOG_FILE 2>&1
-# sleep 1
-# # 启动 CAN 节点
-# echo "Starting CAN nodes..." >> $LOG_FILE
-# roslaunch pubmotor can_motor.launch >> $LOG_FILE 2>&1 &
-# CAN_LAUNCH_PID=$!
-# echo $CAN_LAUNCH_PID >> /home/hzx/motor/ros_pids.txt
-# sleep 1
+sudo ip link set can0 up type can bitrate 1000000 >> $LOG_FILE 2>&1
+sudo ifconfig can0 up >> $LOG_FILE 2>&1
+sleep 1
+# 启动 CAN 节点
+echo "Starting CAN nodes..." >> $LOG_FILE
+roslaunch pubmotor can_motor.launch >> $LOG_FILE 2>&1 &
+CAN_LAUNCH_PID=$!
+echo $CAN_LAUNCH_PID >> /home/hzx/motor/ros_pids.txt
+sleep 1
 
 # 启动 Joy 控制节点
 echo "Starting JOY nodes..." >> $LOG_FILE
@@ -73,3 +76,4 @@ echo "All nodes started at $(date)" >> $LOG_FILE
 
 # 等待所有后台进程结束
 wait $ROSCORE_PID $CAN_LAUNCH_PID $JOY_LAUNCH_PID $MAIN_NODE_PID
+trap "kill $ROSCORE_PID $CAN_LAUNCH_PID $JOY_LAUNCH_PID $MAIN_NODE_PID; exit" SIGINT SIGTERM

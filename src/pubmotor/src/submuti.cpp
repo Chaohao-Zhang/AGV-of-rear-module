@@ -24,11 +24,11 @@
 #define WHEEL_DISTANCE 11
 #define LEFT 1
 #define RIGHT 2
-#define WHEEL_GROUP_DIS 590
+#define WHEEL_GROUP_DIS 590 // the distance of steer wheel groups
 #define H WHEEL_GROUP_DIS/2
 #define WHEEL_WITHIN_DIS 282  
 #define W WHEEL_WITHIN_DIS/2
-#define FRONT_REAR_DIS 2500
+#define FRONT_REAR_DIS 2500  // the distance of motor modules between rear and front
 #define L FRONT_REAR_DIS
 #define PI 3.14159
 #define STATIC_YAW 5.0/180*M_PI
@@ -718,6 +718,13 @@ void multiThreadListener::Adjust_Steering_WHEEL(void){
    // cout<<"the motor 1 speed is:"<<motor1_speed<<"  ,the motor 2 speed is :"<<motor2_speed<<endl;
    // cout<<"the motor 3 speed is:"<<motor3_speed<<"  ,the motor 4 speed is :"<<motor4_speed<<endl;
    // cout<<"the motor 3 speed is:"<<Wheel_Speed[2].liner_speed<<"  ,the motor 4 speed is :"<<Wheel_Speed[3].liner_speed<<endl;
+
+   if(abs(motor1_speed) < 100){
+       shell_data1[0] = 0x07;
+   }
+   if(abs(motor2_speed) < 100){
+       shell_data2[0] = 0x07;
+   }
    shell_data1[2] = motor1_speed&0xff;
    shell_data1[3] = (motor1_speed>>8)&0xff;
    shell_data1[4] = (motor1_speed>>16)&0xff;
@@ -906,11 +913,11 @@ void multiThreadListener::AgvVelotryCallback(const geometry_msgs::Twist::ConstPt
         }
         motor5_speed = vel_pole * 400000;
         motor6_speed = vel_pole * 400000;
-        if (testMotor_info[4].Actual_Pos <= 400000) {
-            motor5_speed *= 0.1;
+        if (testMotor_info[4].Actual_Pos <= 350000) {
+            motor5_speed *= 0.2;
         }
-        if (testMotor_info[5].Actual_Pos <= 400000) {
-            motor6_speed *= 0.1;
+        if (testMotor_info[5].Actual_Pos <= 350000) {
+            motor6_speed *= 0.2;
         }
         // cout<<"the motor 5 speed is:"<<motor5_speed<<"  ,the motor 6 speed is
         // :"<<motor5_speed<<endl;
